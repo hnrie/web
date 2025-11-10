@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { pages } from "@/lib/store";
-import { MadeWithDyad } from "@/components/made-with-dyad";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
 const Index = () => {
@@ -44,7 +43,6 @@ const Index = () => {
           </Button>
         </CardFooter>
       </Card>
-      <MadeWithDyad />
     </div>
   );
 };
