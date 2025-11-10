@@ -2,21 +2,34 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { pages } from "@/lib/store";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { supabase } from "@/integrations/supabase/client";
+import { showError } from "@/utils/toast";
 
 const Index = () => {
   const [content, setContent] = useState("");
+  const [isCreating, setIsCreating] = useState(false);
   const navigate = useNavigate();
 
-  const createPage = () => {
+  const createPage = async () => {
     if (!content.trim()) {
       return; // Don't create empty pages
     }
 
-    // Simple random ID generation
+    setIsCreating(true);
     const id = Math.random().toString(36).substring(2, 10);
-    pages[id] = content;
+    
+    const { error } = await supabase
+      .from("pages")
+      .insert([{ id, content }]);
+
+    if (error) {
+      showError("Failed to create page. Please try again.");
+      console.error("Error creating page:", error);
+      setIsCreating(false);
+      return;
+    }
+    
     navigate(`/p/${id}`);
   };
 
@@ -35,11 +48,12 @@ const Index = () => {
             value={content}
             onChange={(e) => setContent(e.target.value)}
             className="min-h-[300px] text-base"
+            disabled={isCreating}
           />
         </CardContent>
         <CardFooter>
-          <Button onClick={createPage} disabled={!content.trim()} className="w-full">
-            Create Page
+          <Button onClick={createPage} disabled={!content.trim() || isCreating} className="w-full">
+            {isCreating ? "Creating..." : "Create Page"}
           </Button>
         </CardFooter>
       </Card>
