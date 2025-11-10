@@ -7,9 +7,9 @@ import { Home } from "lucide-react";
 
 const PageView = () => {
   const { id } = useParams<{ id: string }>();
-  const content = id ? pages[id] : undefined;
+  const rawContent = id ? pages[id] : undefined;
 
-  if (!content) {
+  if (!rawContent) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center text-center p-4">
         <h1 className="text-4xl font-bold mb-4">Page Not Found</h1>
@@ -24,6 +24,15 @@ const PageView = () => {
       </div>
     );
   }
+
+  const preprocessMarkdown = (text: string) => {
+    // This regex finds standalone image URLs and wraps them in Markdown image syntax.
+    // It avoids changing URLs that are already part of a link `[text](url)` or image `![alt](url)`.
+    const imageUrlRegex = /(?<![\](])(https?:\/\/[^\s]+\.(?:png|jpg|jpeg|gif|svg|webp))/gi;
+    return text.replace(imageUrlRegex, (url) => `![Image](${url})`);
+  };
+
+  const content = preprocessMarkdown(rawContent);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
