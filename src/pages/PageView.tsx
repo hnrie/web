@@ -31,13 +31,6 @@ const PageView = () => {
         <article className="prose prose-invert max-w-none">
           <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
         </article>
-        <div className="mt-8 text-center">
-            <Button asChild variant="outline">
-                <Link to="/">
-                    <Home className="mr-2 h-4 w-4" /> Create a new page
-                </Link>
-            </Button>
-        </div>
       </div>
     </div>
   );
